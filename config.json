@@ -1,0 +1,9 @@
+{
+    "db_host":"database-1.cfu0911ubj3o.us-east-1.rds.amazonaws.com:3306",
+    "db_user":"admin",
+    "db_password":"balaji12",
+    "default_database":"test1",
+    "db_port":3306,
+    "bucketName":"testbucketsri.prod.psribalaji12"
+
+}
