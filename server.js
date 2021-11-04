@@ -20,7 +20,7 @@ var router = express.Router();
 
 // test route
 router.get('/', function(req, res) {
-    res.status(200).send("dasdasdn s")
+    res.status(200).send("dsdsds s")
     // res.json({ message: 'Test API' });
 });
 
