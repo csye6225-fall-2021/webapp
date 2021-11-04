@@ -1,0 +1,56 @@
+name: Code Deploy 
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - run: npm run build --if-present
+    - run: npm test
+    - name: Build Deployment Artifact
+      run: | 
+        mkdir codedeploy_artifact
+        zip -r build_artifact .
+        pwd
+        mv build_artifact.zip codedeploy_artifact
+        cd codedeploy_artifact
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{secrets.AWS_REGION}}
+    - name: Push artifact to s3
+      run: |
+        aws s3 sync ./codedeploy_artifact s3://${{secrets.CODEDEPLOY_BUCKET}}
+    - name: CodeDeploy API call
+      run: |
+        output=$(aws deploy create-deployment \
+          --application-name csye6225-webapp \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name csye6225-webapp-deployment \
+          --description "CSYE6255 - CodeDeploy" \
+          --s3-location bucket=${{secrets.CODEDEPLOY_BUCKET}},key=build_artifact.zip,bundleType=zip \
+          --region ${{secrets.AWS_REGION}} \
+          --output json)
+          depId=$(echo $output | jq -r '.deploymentId')
+          aws deploy wait deployment-successful --deployment-id $depId
+      env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_CODEDEPLOY_BUCKET: ${{secrets.CODEDEPLOY_BUCKET}}
+          
