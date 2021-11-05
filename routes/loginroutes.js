@@ -186,6 +186,7 @@ exports.uploadPic = function(req, res){
               console.log('Error deleting data: ', err); 
               res.status(404).send({message:"Not found"})
             } else {
+              console.log("Delete success ", data2)
               User.deletePic(auth.username, (err1, resp)=>{
                 if(err1){
                   console.log("Upload",err1)
@@ -194,6 +195,8 @@ exports.uploadPic = function(req, res){
 
                   
                 else{
+                  console.log("going to upload")
+
                   s3.upload(data1, function(err1, resData){
                     if (err1) { 
                       console.log(err1);
