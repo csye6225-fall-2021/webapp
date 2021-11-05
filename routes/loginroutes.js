@@ -175,44 +175,58 @@ exports.uploadPic = function(req, res){
             ContentEncoding: 'base64',
             ContentType: 'image/jpeg'
           };
-          s3.upload(data1, function(err1, resData){
-              if (err1) { 
-                console.log(err1);
-                res.status(403).send({
-                  message : "Something went wrong while uploading",
-                  error: err1
-                })
+          User.viewPic(auth.username, (err1, resp)=>{
+
+            console.log("resp ", resp)
+            if(err1){
+              console.log(err1)
+              res.status(404).send({message:"Not found"})
+            }
+              
+            else{
+              console.log("get image ", resp)
+              res.status(200).send(resp)
+            }
+            
+          })
+          // s3.upload(data1, function(err1, resData){
+          //     if (err1) { 
+          //       console.log(err1);
+          //       res.status(403).send({
+          //         message : "Something went wrong while uploading",
+          //         error: err1
+          //       })
                 
-              } else {
-                console.log('Success', resData); 
-                var resData = {
-                  username: data.username,
-                  filename: resData.key,
-                  bucketName : data1.Bucket,
-                  url : resData.Location,
-                  uploaded_date : new Date(),
-                  img_key : resData.key
-                }
-                console.log('successfully uploaded the image!');
-                User.updatePic(resData, (err2, resp)=>{
-                  if(err2){
-                    console.log(err2);
-                    res.status(403).send({
-                      message : "Something went wrong while uploading",
-                      error: err2
-                    })
-                  }
+          //     } else {
+          //       console.log('Success', resData); 
+          //       var resData = {
+          //         username: data.username,
+          //         filename: resData.key,
+          //         bucketName : data1.Bucket,
+          //         url : resData.Location,
+          //         uploaded_date : new Date(),
+          //         img_key : resData.key
+          //       }
+          //       console.log('successfully uploaded the image!');
+          //       User.updatePic(resData, (err2, resp)=>{
+          //         if(err2){
+          //           console.log(err2);
+          //           res.status(403).send({
+          //             message : "Something went wrong while uploading",
+          //             error: err2
+          //           })
+          //         }
                     
-                  else{
-                    console.log("Uploaded ", resp)
-                    res.status(201).send(resData)
+          //         else{
+          //           console.log("Uploaded ", resp)
+          //           res.status(201).send(resData)
 
-                    //res.status(201).send(resp[resp.length-1])
-                  }
+          //           //res.status(201).send(resp[resp.length-1])
+          //         }
 
-                })
-              }
-          });
+          //       })
+          //     }
+          // });
         
         }
     })
