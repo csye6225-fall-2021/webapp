@@ -290,6 +290,8 @@ exports.uploadPic = function(req, res){
                   Bucket: bucketName,
                   Key: auth.username+"_"+key[0].img_key, 
                 };
+                console.log("Bucket name "+ bucketName)
+                console.log("key ", data1.Key)
                 s3.deleteObject(data1, function(err, data1){
                     if (err) { 
                       console.log(err);
