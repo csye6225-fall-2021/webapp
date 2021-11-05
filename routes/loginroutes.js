@@ -288,7 +288,7 @@ exports.uploadPic = function(req, res){
                 console.log("key", key)
                 var data1 = {
                   Bucket: bucketName,
-                  Key: auth.username+"_"+key[0].img_key, 
+                  Key: key[0].img_key, 
                 };
                 console.log("Bucket name "+ bucketName)
                 console.log("key ", data1.Key)
