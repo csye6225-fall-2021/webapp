@@ -183,16 +183,16 @@ exports.uploadPic = function(req, res){
           console.log("dd ",deteleData.Bucket)
           console.log("dd tt",deteleData.Key)
 
-          s3.deleteObject(deteleData, function(err, data2){
-            if (err) { 
-              console.log(err);
-              console.log('Error deleting data: ', err); 
+          s3.deleteObject(deteleData, function(err1, data2){
+            if (err1) { 
+              console.log(err1);
+              console.log('Error deleting data: ', err1); 
               res.status(404).send({message:"Not found"})
             } else {
               console.log("Delete success ", data2)
-              User.deletePic(auth.username, (err1, resp)=>{
-                if(err1){
-                  console.log("Upload",err1)
+              User.deletePic(auth.username, (err2, resp)=>{
+                if(err2){
+                  console.log("Upload",err2)
                   res.status(404).send({message:"Not found"})
                 }
 
@@ -200,12 +200,12 @@ exports.uploadPic = function(req, res){
                 else{
                   console.log("going to upload")
 
-                  s3.upload(data1, function(err1, resData){
-                    if (err1) { 
-                      console.log(err1);
+                  s3.upload(data1, function(err3, resData){
+                    if (err3) { 
+                      console.log(err3);
                       res.status(403).send({
                         message : "Something went wrong while uploading",
-                        error: err1
+                        error: err3
                       })
                       
                     } else {
