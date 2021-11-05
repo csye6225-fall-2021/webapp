@@ -22,7 +22,7 @@ jobs:
     - run: npm i --unsafe-perm
     - run: npm run build --if-present
     # - run: npx nodemon server.js
-    - run: npm test
+    #- run: npm test
     - name: Build Deployment Artifact
       run: | 
         mkdir codedeploy_artifact
