@@ -174,8 +174,13 @@ exports.uploadPic = function(req, res){
             Body: buf,
             ContentEncoding: 'base64',
             ContentType: 'image/jpeg'
+          }; 
+          var deteleData = {
+            Bucket: bucketName,
+            Key: auth.username+"_"+req.body.filename, 
+           
           };
-          s3.deleteObject(data1, function(err, data2){
+          s3.deleteObject(deteleData, function(err, data2){
             if (err) { 
               console.log(err);
               console.log('Error deleting data: ', err); 
