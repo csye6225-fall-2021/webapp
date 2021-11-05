@@ -293,12 +293,12 @@ exports.uploadPic = function(req, res){
                 s3.deleteObject(data1, function(err, data1){
                     if (err) { 
                       console.log(err);
-                      console.log('Error deleting data: ', data1); 
+                      console.log('Error deleting data: ', err); 
                       res.status(404).send({message:"Not found"})
                     } else {
                       User.deletePic(auth.username, (err1, resp)=>{
                         if(err1){
-                          console.log(err1)
+                          console.log("Delete PIC",err1)
                           res.status(404).send({message:"Not found"})
                         }
                           
