@@ -50,6 +50,7 @@ exports.register = function(req,res){
       if(err.errno == 1062){
        return res.status(400).send({message: "Email ID already exists"})
       }
+      console.log("err ",err)
       res.status(400).send({
         message: "Something went wrong while creating. Try again."
       });
