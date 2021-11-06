@@ -187,7 +187,7 @@ exports.uploadPic = function(req, res){
               console.log("get image ", resp)
               var deteleData = {
                 Bucket: bucketName,
-                Key: resp.img_key, 
+                Key: resp[0].img_key, 
                
               };
               console.log("dd ",deteleData.Bucket)
