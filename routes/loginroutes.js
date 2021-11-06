@@ -393,12 +393,19 @@ exports.uploadPic = function(req, res){
                           
                         else{
                           console.log("Delete row", resp)
-                          res.status(204).send({message:"Deleted Sucessfully"})
+                          User.deletePicRow(auth.username, (dErr, resp)=>{
+                            if(dErr){
+                              console.log("delet row",dErr)
+                              res.status(404).send({message:"Not found"})
+                            }else{
+                              res.status(204).send({message:"Deleted Sucessfully"})
+                            }
+                          })
+                         
                         }
                         
                       })
-                      
-                      //console.log("Deleted Sucessfully")
+                    
                     }
                 });
               }
