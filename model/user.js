@@ -112,7 +112,7 @@ User.updatePic = async (picInfo, result) =>{
   let conn = await sql.getDBConnection();
 
   try{
-    let [data1, fields1] =await conn.query(" DELETE FROM image WHERE username = ?",picInfo.username)
+    // let [data1, fields1] =await conn.query(" DELETE FROM image WHERE username = ?",picInfo.username)
     let [data, fields] =await conn.query("INSERT INTO image SET ?", picInfo)
  
     result(null, data);
