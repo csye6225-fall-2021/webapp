@@ -185,61 +185,117 @@ exports.uploadPic = function(req, res){
               
             else{
               console.log("get image ", resp)
-              var deteleData = {
-                Bucket: bucketName,
-                Key: resp[0].img_key, 
-               
-              };
-              console.log("dd ",deteleData.Bucket)
-              console.log("dd tt",deteleData.Key)
-              // res.status(200).send(resp)
-              s3.deleteObject(deteleData, function(err1, data2){
-                if (err1) { 
-                  console.log(err1);
-                  console.log('Error deleting data: ', err1); 
-                  res.status(404).send({message:"Not found"})
-                } else {
-                  console.log("Delete success ", data2)
-                  User.deletePicRow(auth.username, (err2, resp)=>{
-                    if(err2){
-                      console.log("Upload",err2)
-                      res.status(404).send({message:"Not found"})
-                    }
-    
-                      
-                    else{
-                      console.log("going to upload")
-    
-                      s3.upload(data1, function(err3, resData){
-                        if (err3) { 
-                          console.log(err3);
-                          res.status(403).send({
-                            message : "Something went wrong while uploading",
-                            error: err3
-                          })
-                          
-                        } else {
-                          console.log('Success', resData); 
-                          var resData = {
-                            username: data.username,
-                            filename: resData.key,
-                            bucketName : data1.Bucket,
-                            url : resData.Location,
-                            uploaded_date : new Date(),
-                            img_key : resData.key
-                          }
-                          console.log('successfully uploaded the image!');
-                          
-                        }
-                    });
-                  
-                    }
+              if(resp.length > 0){
+                console.log("No image found")
+                var deteleData = {
+                  Bucket: bucketName,
+                  Key: resp[0].img_key, 
+                 
+                };
+                console.log("dd ",deteleData.Bucket)
+                console.log("dd tt",deteleData.Key)
+                // res.status(200).send(resp)
+                s3.deleteObject(deteleData, function(err1, data2){
+                  if (err1) { 
+                    console.log(err1);
+                    console.log('Error deleting data: ', err1); 
+                    res.status(404).send({message:"Not found"})
+                  } else {
+                    console.log("Delete success ", data2)
+                    User.deletePicRow(auth.username, (err2, resp)=>{
+                      if(err2){
+                        console.log("Upload",err2)
+                        res.status(404).send({message:"Not found"})
+                      }
+      
+                        
+                      else{
+                        console.log("going to upload")
+      
+                        s3.upload(data1, function(err3, resData){
+                          if (err3) { 
+                            console.log(err3);
+                            res.status(403).send({
+                              message : "Something went wrong while uploading",
+                              error: err3
+                            })
+                            
+                          } else {
+                            var update = {
+                              bucketName: bucketName,
+                              img_key: resData.Key, 
+                              username: auth.username,
+                              filename :resData.Key,
+                              url: resData.Location,
+                              uploaded_date: new Date()
+                            }; 
+                            
+                            User.updatePic(update,(updateErr, newValue) =>{
+                              
+                              if(updateErr){
+                                console.log("updateErr", updateErr)
+                         
                     
-                  })
-                  
-                  //console.log("Deleted Sucessfully")
-                }
-            });
+                              }else{
+                    
+                                console.log('Success', resData);
+  
+                                console.log('successfully uploaded the image!');
+                                res.send(resData)
+                              }
+                                        
+                            })
+                                               
+                          }
+                      });
+                    
+                      }
+                      
+                    })
+                    
+                  }
+              });
+              }else{
+                console.log("image found")
+
+                s3.upload(data1, function(err3, resData){
+                  if (err3) { 
+                    console.log(err3);
+                    res.status(403).send({
+                      message : "Something went wrong while uploading",
+                      error: err3
+                    })
+                    
+                  } else {
+                    var update = {
+                      bucketName: bucketName,
+                      img_key: resData.Key, 
+                      username: auth.username,
+                      filename :resData.Key,
+                      url: resData.Location,
+                      uploaded_date: new Date()
+                    }; 
+                    
+                    User.updatePic(update,(updateErr, newValue) =>{
+                      
+                      if(updateErr){
+                        console.log("updateErr", updateErr)
+                 
+            
+                      }else{
+            
+                        console.log('Success', resData);
+
+                        console.log('successfully uploaded the image!');
+                        res.send(resData)
+                      }
+                                
+                    })
+                                       
+                  }
+              });
+              }
+              
             }
             
           })
