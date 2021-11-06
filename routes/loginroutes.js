@@ -200,7 +200,7 @@ exports.uploadPic = function(req, res){
                   res.status(404).send({message:"Not found"})
                 } else {
                   console.log("Delete success ", data2)
-                  User.deletePic(auth.username, (err2, resp)=>{
+                  User.deletePicRow(auth.username, (err2, resp)=>{
                     if(err2){
                       console.log("Upload",err2)
                       res.status(404).send({message:"Not found"})
