@@ -176,8 +176,7 @@ exports.uploadPic = function(req, res){
             ContentType: 'image/jpeg'
           }; 
           
-          console.log("dd ",deteleData.Bucket)
-          console.log("dd tt",deteleData.Key)
+         
           User.viewPic(auth.username, (err5, resp)=>{
             if(err5){
               console.log(err5)
@@ -191,7 +190,9 @@ exports.uploadPic = function(req, res){
                 Key: resp.img_key, 
                
               };
-              res.status(200).send(resp)
+              console.log("dd ",deteleData.Bucket)
+              console.log("dd tt",deteleData.Key)
+              // res.status(200).send(resp)
               s3.deleteObject(deteleData, function(err1, data2){
                 if (err1) { 
                   console.log(err1);
