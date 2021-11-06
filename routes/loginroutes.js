@@ -185,12 +185,12 @@ exports.uploadPic = function(req, res){
             }
               
             else{
+              console.log("get image ", resp)
               var deteleData = {
                 Bucket: bucketName,
                 Key: resp.img_key, 
                
               };
-              console.log("get image ", resp)
               res.status(200).send(resp)
               s3.deleteObject(deteleData, function(err1, data2){
                 if (err1) { 
