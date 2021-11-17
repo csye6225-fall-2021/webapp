@@ -46,7 +46,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      working-directory: webapp
+      CI: true
 
     strategy:
       matrix:
@@ -62,5 +62,5 @@ jobs:
       run: npm i --unsafe-perm
     - run: npm run build --if-present
     - run: npm test
-      env:
-        CI: true
+      # env:
+      #   CI: true
