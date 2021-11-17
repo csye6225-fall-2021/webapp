@@ -13,12 +13,18 @@ s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 var {bucketName} = require('../config.json')
+const metrics = require("../metrics");
 
 
 var User = require("../model/user")
 
 exports.register = function(req,res){
   // console.log("register called");
+
+  metrics.increment("User.POST.createUser");
+  let timer = new Date();
+  let db_timer = new Date();  
+
   if(req.body.password == undefined || req.body.username == undefined || req.body.first_name == undefined || req.body.last_name == undefined){
 
     return res.status(400).send({message:"All the fields are required to create an account"})
@@ -46,6 +52,7 @@ exports.register = function(req,res){
    }
 
   User.create(users, (err,data) => {
+    metrics.timing('User.POST.dbcreateUser',db_timer)
     if (err){
       if(err.errno == 1062){
        return res.status(400).send({message: "Email ID already exists"})
@@ -55,7 +62,10 @@ exports.register = function(req,res){
         message: "Something went wrong while creating. Try again."
       });
     }
+    
     else res.status(201).send(data);
+    metrics.timing("User.POST.createUser",timer);
+    
   });
 
 }
