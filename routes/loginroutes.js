@@ -86,6 +86,9 @@ exports.register = function(req,res){
 exports.getDetails = function(req, res){
     logger.info("get user called");
 
+    sdc.increment("User.get.getUser");
+    let timer = new Date();
+    let db_timer = new Date();  
 
     // console.log("users ", req.headers)
 
@@ -103,6 +106,8 @@ exports.getDetails = function(req, res){
     username : username,
     password : password
   }
+    sdc.timing('User.GET.dbgetUser',db_timer)
+
     User.authenticate(auth , (err, data)=>{
           if (!err)
           res.send(data)
@@ -112,6 +117,8 @@ exports.getDetails = function(req, res){
           res.status(400).send({message:"Authentication failed. Incorrect username or password"})
         }
     })
+    sdc.timing('User.GET.getUser',db_timer)
+
 
     
 }
@@ -121,6 +128,9 @@ exports.update = function (req, res){
 
   // console.log("users ", req.headers)
   logger.info("Update user called");
+  sdc.increment("User.PUT.userUpdate");
+  let timer = new Date();
+  let db_timer = new Date();  
 
   const base64Credentials =  req.headers.authorization.split(' ')[1];
   const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
@@ -150,6 +160,8 @@ exports.update = function (req, res){
     password : password
   }
   User.authenticate(auth , (err, data)=>{
+    sdc.timing('User.PUT.dbUpdateUser',db_timer)
+
         if (err){
         logger.error("Authentication failed. Incorrect username or password");
 
@@ -176,6 +188,8 @@ exports.update = function (req, res){
         })
       }
   })
+  sdc.timing('User.PUT.dbUpdateUser',db_timer)
+
 
 }
 
@@ -183,6 +197,9 @@ exports.update = function (req, res){
 exports.uploadPic = function(req, res){ 
  
   logger.info("Update pic called");
+  sdc.increment("User.POST.UploadPic");
+  let timer = new Date();
+  let db_timer = new Date();  
 
   const base64Credentials =  req.headers.authorization.split(' ')[1];
   const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
@@ -198,6 +215,8 @@ exports.uploadPic = function(req, res){
       username : username,
       password : password
     }
+    sdc.timing('User.POST.S3UploadPic',db_timer)
+
     User.authenticate(auth , (err, data)=>{
         if (err){
           logger.error("Authentication failed. Incorrect username or password");
@@ -343,13 +362,17 @@ exports.uploadPic = function(req, res){
          
         }
     })
+    sdc.timing('User.POST.S3UploadPic',db_timer)
 
   }
 
   exports.viewPic = function(req, res){ 
     
     logger.info("View pic called");
-
+    sdc.increment("User.GET.viewPic");
+    let timer = new Date();
+    let db_timer = new Date();  
+    
     const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [username, password] = credentials.split(':');
@@ -364,6 +387,8 @@ exports.uploadPic = function(req, res){
         username : username,
         password : password
       }
+      sdc.timing('User.GET.S3viewPic',db_timer)
+
       User.authenticate(auth , (err, data)=>{
           if (err){
             logger.error("Authentication failed. Incorrect username or password");
@@ -388,6 +413,8 @@ exports.uploadPic = function(req, res){
             })
           }
       })
+      sdc.timing('User.GET.S3viewPic',db_timer)
+
   
     }
 
@@ -395,6 +422,9 @@ exports.uploadPic = function(req, res){
   exports.deletePic = function(req, res){
 
     logger.info("Delete pic called");
+    sdc.increment("User.DELETE.deletePic");
+    let timer = new Date();
+    let db_timer = new Date();  
 
     const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
@@ -410,6 +440,8 @@ exports.uploadPic = function(req, res){
         username : username,
         password : password
       }
+    sdc.timing("User.DELETE.deletePic");
+
       User.authenticate(auth , (err, data)=>{
             if (err){
             logger.error("Authentication failed. Incorrect username or password");
@@ -467,6 +499,8 @@ exports.uploadPic = function(req, res){
           
           }
       })
+      sdc.timing("User.DELETE.deletePic");
+
           
 }
   
