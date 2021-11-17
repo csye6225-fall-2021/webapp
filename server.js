@@ -37,7 +37,7 @@ router.get('/user/self/pic',login.viewPic)
 router.delete('/user/self/pic', login.deletePic)
 
 
-app.use('/v2', router);
+app.use('/v1', router);
 app.listen(8000);
 logger.info("Application running");
 
