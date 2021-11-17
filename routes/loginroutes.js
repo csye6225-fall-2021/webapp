@@ -18,6 +18,8 @@ var SDC = require('statsd-client'),
 	sdc = new SDC({port: 8125});
 
 var User = require("../model/user")
+const log = require("./logs")
+const logger = log.getLogger('logs');
 
 exports.register = function(req,res){
   // console.log("register called");
@@ -35,6 +37,8 @@ exports.register = function(req,res){
 
   if (!regexEmail.test(req.body.username)) {
     return res.status(400).send({message:" Invalid Username. It should be email ID"})
+    logger.error("Invalid Username. It should be email ID");
+
   } 
 
   var today = new Date();
@@ -56,15 +60,22 @@ exports.register = function(req,res){
     sdc.timing('User.POST.dbcreateUser',db_timer)
     if (err){
       if(err.errno == 1062){
+        logger.error("Email ID already exists");
+
        return res.status(400).send({message: "Email ID already exists"})
+
       }
       console.log("err ",err)
       res.status(400).send({
         message: "Something went wrong while creating. Try again."
       });
+      logger.error("Something went wrong while creating. Try again");
+
     }
     
     else res.status(201).send(data);
+    logger.info("Create success");
+
     sdc.timing("User.POST.createUser",timer);
     
   });
@@ -72,6 +83,7 @@ exports.register = function(req,res){
 }
 
 exports.getDetails = function(req, res){
+    logger.info("get user called");
 
 
     // console.log("users ", req.headers)
@@ -82,6 +94,8 @@ exports.getDetails = function(req, res){
   
     if(username == undefined || password == undefined){
       res.status(400).send({message:"Authentication failed. Provide username and password"})
+      logger.error("Authentication failed. Provide username and password");
+
       return
     }
   var auth = {
@@ -92,6 +106,8 @@ exports.getDetails = function(req, res){
           if (!err)
           res.send(data)
         else {
+          logger.error("Authentication failed. Provide username and password");
+
           res.status(400).send({message:"Authentication failed. Incorrect username or password"})
         }
     })
@@ -103,6 +119,7 @@ exports.getDetails = function(req, res){
 exports.update = function (req, res){
 
   // console.log("users ", req.headers)
+  logger.info("Update user called");
 
   const base64Credentials =  req.headers.authorization.split(' ')[1];
   const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
@@ -117,6 +134,8 @@ exports.update = function (req, res){
     res.status(400).send({
       message : "Cannot update the given values."
     })
+    logger.error("Cannot update the given values");
+
     return
   }
   var details = {
@@ -130,9 +149,11 @@ exports.update = function (req, res){
     password : password
   }
   User.authenticate(auth , (err, data)=>{
-        if (err)
-        return res.status(403).send({message:"Authentication failed. Incorrect username or password"})
+        if (err){
+        logger.error("Authentication failed. Incorrect username or password");
 
+        return res.status(403).send({message:"Authentication failed. Incorrect username or password"})
+        }
       else {
         //console.log("SS ", data[username])
         User.update(username, details, (err1, newValue) =>{
@@ -144,6 +165,7 @@ exports.update = function (req, res){
             })
 
           }else{
+            logger.info("Update Success");
 
             return res.status(204).send()
             
@@ -159,6 +181,8 @@ exports.update = function (req, res){
 
 exports.uploadPic = function(req, res){ 
  
+  logger.info("Update pic called");
+
   const base64Credentials =  req.headers.authorization.split(' ')[1];
   const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
   const [username, password] = credentials.split(':');
@@ -174,9 +198,11 @@ exports.uploadPic = function(req, res){
       password : password
     }
     User.authenticate(auth , (err, data)=>{
-        if (err)
+        if (err){
+          logger.error("Authentication failed. Incorrect username or password");
+
           return res.status(403).send({message:"Authentication failed. Incorrect username or password"})
-  
+        }
         else {
           buf = Buffer.from(req.body.contents.replace(/^data:image\/\w+;base64,/, ""),'base64')
           var data1 = {
@@ -298,6 +324,8 @@ exports.uploadPic = function(req, res){
                         console.log('Success', resData);
 
                         console.log('successfully uploaded the image!');
+                        logger.info("successfully uploaded the image");
+
                         res.send(resData)
                       }
                                 
@@ -318,7 +346,9 @@ exports.uploadPic = function(req, res){
   }
 
   exports.viewPic = function(req, res){ 
- 
+    
+    logger.info("View pic called");
+
     const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [username, password] = credentials.split(':');
@@ -334,9 +364,11 @@ exports.uploadPic = function(req, res){
         password : password
       }
       User.authenticate(auth , (err, data)=>{
-          if (err)
+          if (err){
+            logger.error("Authentication failed. Incorrect username or password");
+
             return res.status(403).send({message:"Authentication failed. Incorrect username or password"})
-    
+          }
           else {
             //console.log("SS ", data[username])
             User.viewPic(auth.username, (err1, resp)=>{
@@ -346,6 +378,8 @@ exports.uploadPic = function(req, res){
               }
                 
               else{
+                logger.info("get image success");
+
                 console.log("get image ", resp)
                 res.status(200).send(resp)
               }
@@ -358,6 +392,8 @@ exports.uploadPic = function(req, res){
 
   
   exports.deletePic = function(req, res){
+
+    logger.info("Delete pic called");
 
     const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
@@ -374,9 +410,11 @@ exports.uploadPic = function(req, res){
         password : password
       }
       User.authenticate(auth , (err, data)=>{
-            if (err)
+            if (err){
+            logger.error("Authentication failed. Incorrect username or password");
+
             return res.status(403).send({message:"Authentication failed. Incorrect username or password"})
-    
+            }
           else {
             //console.log("SS ", data[username])
             User.viewPic(auth.username, (err1, key)=>{
@@ -409,6 +447,8 @@ exports.uploadPic = function(req, res){
                               console.log("delet row",dErr)
                               res.status(404).send({message:"Not found"})
                             }else{
+                              logger.info("Delete success");
+
                               res.status(204).send({message:"Deleted Sucessfully"})
                             }
                           })
