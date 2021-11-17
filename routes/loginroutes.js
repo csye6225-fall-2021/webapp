@@ -14,14 +14,15 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 var {bucketName} = require('../config.json')
 const metrics = require("../metrics");
-
+var SDC = require('statsd-client'),
+	sdc = new SDC({port: 8125});
 
 var User = require("../model/user")
 
 exports.register = function(req,res){
   // console.log("register called");
 
-  metrics.increment("User.POST.createUser");
+  sdc.increment("User.POST.createUser");
   let timer = new Date();
   let db_timer = new Date();  
 
@@ -52,7 +53,7 @@ exports.register = function(req,res){
    }
 
   User.create(users, (err,data) => {
-    metrics.timing('User.POST.dbcreateUser',db_timer)
+    sdc.timing('User.POST.dbcreateUser',db_timer)
     if (err){
       if(err.errno == 1062){
        return res.status(400).send({message: "Email ID already exists"})
@@ -64,7 +65,7 @@ exports.register = function(req,res){
     }
     
     else res.status(201).send(data);
-    metrics.timing("User.POST.createUser",timer);
+    sdc.timing("User.POST.createUser",timer);
     
   });
 
