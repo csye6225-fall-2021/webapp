@@ -1,6 +1,6 @@
 # Network Structures and Cloud CSYE6225
 
-This is the first Assignment. The webapp contains three API's and this was developed using NodeJs.. 
+This is the first Assignment. The webapp contains three API's and this was developed using NodeJs...........
 
 ---
 ## Requirements
