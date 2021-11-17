@@ -18,7 +18,7 @@ var SDC = require('statsd-client'),
 	sdc = new SDC({port: 8125});
 
 var User = require("../model/user")
-const log = require("./logs")
+const log = require("../logs")
 const logger = log.getLogger('logs');
 
 exports.register = function(req,res){
