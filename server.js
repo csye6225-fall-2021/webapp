@@ -4,6 +4,9 @@ var bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 var app = express();
+const log = require("./logs")
+const logger = log.getLogger('logs');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -36,5 +39,6 @@ router.delete('/user/self/pic', login.deletePic)
 
 app.use('/v2', router);
 app.listen(8000);
+logger.info("Application running");
 
 module.exports = app
