@@ -22,7 +22,8 @@ const log = require("../logs")
 const logger = log.getLogger('logs');
 
 exports.register = function(req,res){
-  // console.log("register called");
+
+  logger.info("Register user called");
 
   sdc.increment("User.POST.createUser");
   let timer = new Date();
