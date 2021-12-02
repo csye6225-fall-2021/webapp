@@ -569,9 +569,13 @@ console.log("Querying for movies from 1985.");
 
 var params = {
     TableName : "dynamo",
-    Key:{
-      "id": email
-  }
+  //Key:{
+  //     "id": {"S" : email}
+  // }
+    KeyConditionExpression: 'id = :id',
+    ExpressionAttributeValues : {
+      ':id' : {email}
+    }
 };
 
 docClient.query(params, function(err, data) {
