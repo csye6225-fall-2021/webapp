@@ -583,6 +583,7 @@ ddb.getItem(queryParams, (err, data) => {
      logger.info("err", err)
   else {
       logger.info("****",data.Item)
+      logger.info("Tokennnn",data.Item.token)
 
        if(token == data.Item.token){
         User.updateStatus(username,(err1, newValue) =>{
