@@ -27,10 +27,12 @@
     "node-session": "^1.2.1",
     "nodemon": "^2.0.14",
     "promise": "^7.1.1",
+    "querystring": "^0.2.1",
     "rmfr": "^1.0.2",
     "statsd-client": "^0.4.7",
     "supertest": "^6.1.6",
     "update": "^0.7.4",
+    "url": "^0.11.0",
     "uuid": "^8.3.2"
   }
 }

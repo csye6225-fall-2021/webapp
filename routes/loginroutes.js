@@ -12,7 +12,7 @@ AWS.config.update({region: 'us-east-1'});
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-var {bucketName} = require('../config.json')
+var {bucketName, SNS_TOPIC_ARN } = require('../config.json')
 const metrics = require("../metrics");
 var SDC = require('statsd-client'),
 	sdc = new SDC({port: 8125});
@@ -20,6 +20,9 @@ var SDC = require('statsd-client'),
 var User = require("../model/user")
 const log = require("../logs")
 const logger = log.getLogger('logs');
+const querystring = require('querystring');
+const url = require('url');
+
 
 exports.register = function(req,res){
 
@@ -89,8 +92,9 @@ exports.register = function(req,res){
       var Dynamoparams = {
         TableName: table,
         Item:{
-            email: req.body.username,
-            "token": Math.random().toString(36).substr(2, 5)
+            id : req.body.username,
+            // email: req.body.username,
+            token: Math.random().toString(36).substr(2, 5)
 
         }
     };
@@ -542,6 +546,24 @@ exports.uploadPic = function(req, res){
 
           
 }
-  
+
+exports.verifyToken = function(req, res){
+
+  logger.info("Verify Token");
+
+  console.log(querystring.parse(url));
+  var query = require('url').parse(req.url,true).query;
+
+  var email = query.email;
+  var token = query.token;
+
+  console.log("CT",email )
+  console.log("CT",token )
+  logger.info("Verify Token em", email);
+  logger.info("Verify Token tk", token);
+
+
+
+}
 
   
