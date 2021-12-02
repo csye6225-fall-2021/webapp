@@ -574,7 +574,7 @@ var params = {
   // }
     KeyConditionExpression: 'id = :id',
     ExpressionAttributeValues : {
-      ':id' : {"S" : email}
+      ':id' : {email}
     }
 };
 
