@@ -583,8 +583,8 @@ ddb.getItem(queryParams, (err, data) => {
      logger.info("err", err)
   else {
       logger.info("****",data.Item)
-      var d = data.Item.token
-      d = d.split(":")
+      // var d = data.Item.token
+      // d = d.split(":")
       logger.info("Tokennnnsss",data.Item.token)
 
       
