@@ -563,14 +563,14 @@ exports.verifyToken = function(req, res){
   logger.info("Verify Token em", email);
   logger.info("Verify Token tk", token);
 
-var docClient = new AWS.DynamoDB.DocumentClient();
+  var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
 console.log("Querying for movies from 1985.");
 
 let queryParams = {
   TableName: 'dynamo',
   Key: {
-      'id': { S: email }
+      "id": { "S": email }
   },
 };
 // first get item and check if email exists
@@ -578,27 +578,42 @@ let queryParams = {
 //if exists check if ttl > currentTime,
 // if ttl is greater than current time do nothing,
 // else send email
-docClient.getItem(queryParams, (err, data) => {
+ddb.getItem(queryParams, (err, data) => {
   if (err) 
-     logger.log("err", err)
+     logger.info("err", err)
   else {
-      logger.log("res",data.Item)
+      logger.info("****",data.Item)
+      logger.info("Tokennnnsss",data.Item.token)
+      logger.info("sssss",JSON.stringify(data, null, 2))
+
       
-      }
+       if(token == data.Item.token){
+        User.updateStatus(username,(err1, newValue) =>{
+          
+          console.log("err 1", err1)
+          if(err1){
+            logger.error("Verification Failed");
+
+            res.status(403).send({
+              message : "Verification failed"
+            })
+
+          }else{
+            logger.info("Verification Success");
+
+            return res.status(200).send("Successfully Verified")
+            
+          }
+
+        })
+
+       }else{
+        return res.status(400).send("Token invalid")
+       }
+   }
   
 });
 
-// docClient.query(params, function(err, data) {
-//     if (err) {
-     
-
-//         logger.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-//     } else {
-
-//         logger.info("Query succeeded.", data);
-        
-//     }
-// });
 
 }
 
