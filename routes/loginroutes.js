@@ -583,8 +583,9 @@ ddb.getItem(queryParams, (err, data) => {
      logger.info("err", err)
   else {
       logger.info("****",data.Item)
-      logger.info("Tokennnnsss",data.Item.token.split(":")[1])
-      logger.info("sssss",JSON.stringify(data, null, 2))
+      var d = data.Item.token
+      d = d.split(":")
+      logger.info("Tokennnnsss",data.Item.token)
 
       
        if(token == data.Item.token){
