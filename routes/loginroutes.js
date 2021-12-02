@@ -584,7 +584,9 @@ ddb.getItem(queryParams, (err, data) => {
   else {
       logger.info("****",data.Item)
       logger.info("Tokennnnsss",data.Item.token)
+      logger.info("sssss",JSON.stringify(data, null, 2))
 
+      
        if(token == data.Item.token){
         User.updateStatus(username,(err1, newValue) =>{
           
@@ -602,7 +604,6 @@ ddb.getItem(queryParams, (err, data) => {
             return res.status(200).send("Successfully Verified")
             
           }
-
 
         })
 
