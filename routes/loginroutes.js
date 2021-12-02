@@ -570,7 +570,7 @@ console.log("Querying for movies from 1985.");
 var params = {
     TableName : "dynamo",
     Key:{
-      id: email
+      "id": email
   }
 };
 
@@ -582,9 +582,7 @@ docClient.query(params, function(err, data) {
     } else {
 
         logger.info("Query succeeded.", data);
-        data.Items.forEach(function(item) {
-            console.log(" -", item.year + ": " + item.title);
-        });
+        
     }
 });
 
