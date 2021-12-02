@@ -55,6 +55,8 @@ exports.register = function(req,res){
     "username": req.body.username,
     "first_name" : req.body.first_name,
     "last_name" : req.body.last_name,
+    "isVerified": false,
+    "verifiedDate":""
    }
 
   User.create(users, (err,data) => {
@@ -74,11 +76,49 @@ exports.register = function(req,res){
 
     }
     
-    else res.status(201).send(data);
-    logger.info("Create success");
+    else {
+      res.status(201).send(data);
+      logger.info("Create success");
 
-    sdc.timing("User.POST.createUser",timer);
+      sdc.timing("User.POST.createUser",timer);
+
+      res.status(201).send(data);
+      var docClient = new AWS.DynamoDB.DocumentClient();
+      var table = "dynamo";
+
+
+      var Dynamoparams = {
+        TableName: table,
+        Key:{
+            "email": req.body.username,
+            "token": Math.random().toString(36).substr(2, 5)
+
+        }
+    };
     
+    docClient.get(Dynamoparams, function(err, data) {
+        if (err) {
+            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        } else {
+            console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+        }
+    });
+      var params = {
+        Message: 'MESSAGE_TEXT', /* required */
+        TopicArn: SNS_TOPIC_ARN
+      };
+      var publishTextPromise = new AWS.SNS({apiVersion: '2010-03-31'}).publish(params).promise();
+
+// Handle promise's fulfilled/rejected states
+    publishTextPromise.then(
+      function(data) {
+        console.log(`Message ${params.Message} sent to the topic ${params.TopicArn}`);
+        console.log("MessageID is " + data.MessageId);
+      }).catch(
+        function(err) {
+        console.error(err, err.stack);
+      });
+    }
   });
 
 }
