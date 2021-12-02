@@ -592,24 +592,24 @@ ddb.getItem(queryParams, (err, data) => {
       var t = Object.values(data.Item.token)[0]
        if(token === t){
         logger.info("Verification Success");
-        // User.updateStatus(username,(err1, newValue) =>{
+        User.updateStatus(email,(err1, newValue) =>{
           
-        //   console.log("err 1", err1)
-        //   if(err1){
-        //     logger.error("Verification Failed");
+          console.log("err 1", err1)
+          if(err1){
+            logger.error("Verification Failed");
 
-        //     res.status(403).send({
-        //       message : "Verification failed"
-        //     })
+            res.status(403).send({
+              message : "Verification failed"
+            })
 
-        //   }else{
-        //     logger.info("Verification Success");
+          }else{
+            logger.info("Verification Success");
 
-        //     return res.status(200).send("Successfully Verified")
+            return res.status(200).send("Successfully Verified")
             
-        //   }
+          }
 
-        // })
+        })
 
        }else{
         return res.status(400).send("Token invalid")
