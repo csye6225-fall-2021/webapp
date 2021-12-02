@@ -89,7 +89,7 @@ exports.register = function(req,res){
       var Dynamoparams = {
         TableName: table,
         Item:{
-            "email": req.body.username,
+            email: req.body.username,
             "token": Math.random().toString(36).substr(2, 5)
 
         }
@@ -103,7 +103,7 @@ exports.register = function(req,res){
       }
   });
       var params = {
-        Message: 'MESSAGE_TEXT', /* required */
+        Message: req.body.username, /* required */
         TopicArn: SNS_TOPIC_ARN
       };
       var publishTextPromise = new AWS.SNS({apiVersion: '2010-03-31'}).publish(params).promise();

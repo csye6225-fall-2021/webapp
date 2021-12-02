@@ -10,6 +10,8 @@ const User = function(customer) {
   this.account_created = customer.account_created;
   this.account_updated = customer.account_updated;
   this.password = customer.password;
+  this.isVerified = false
+  
 };
 
 User.create = async (newCustomer, result) => {
