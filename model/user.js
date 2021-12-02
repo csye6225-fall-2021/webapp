@@ -11,7 +11,7 @@ const User = function(customer) {
   this.account_updated = customer.account_updated;
   this.password = customer.password;
   this.isVerified = false
-  
+
 };
 
 User.create = async (newCustomer, result) => {
@@ -127,6 +127,22 @@ User.updatePic = async (picInfo, result) =>{
 
 }
 
+User.updateStatus = async (username)=>{
+  let conn = await sql.getDBConnection();
+  try{
+    // let [data1, fields1] =await conn.query(" DELETE FROM image WHERE username = ?",picInfo.username)
+    let [data, fields] =await conn.query("UPDATE users set isVerified =1 where username =?", username)
+ 
+    result(null, data);
+    return
+    
+   
+  }catch (err){
+    return result(err, null);
+  }
+
+}
+
 User.viewPic = async (username, result)=>{
 
   let conn = await sql.getDBConnection();
@@ -193,5 +209,6 @@ User.checkifPicExists = async (username,  ) =>{
     return result(err, null);
   }
 }
+
 
 module.exports = User;
