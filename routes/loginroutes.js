@@ -563,7 +563,28 @@ exports.verifyToken = function(req, res){
   logger.info("Verify Token em", email);
   logger.info("Verify Token tk", token);
 
+var docClient = new AWS.DynamoDB.DocumentClient();
 
+console.log("Querying for movies from 1985.");
+
+var params = {
+    TableName : "dynamo",
+    id:email
+};
+
+docClient.query(params, function(err, data) {
+    if (err) {
+     
+
+        logger.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+
+        logger.info("Query succeeded.", data);
+        data.Items.forEach(function(item) {
+            console.log(" -", item.year + ": " + item.title);
+        });
+    }
+});
 
 }
 
