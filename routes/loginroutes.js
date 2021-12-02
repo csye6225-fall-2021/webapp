@@ -82,27 +82,26 @@ exports.register = function(req,res){
 
       sdc.timing("User.POST.createUser",timer);
 
-      res.status(201).send(data);
       var docClient = new AWS.DynamoDB.DocumentClient();
       var table = "dynamo";
 
 
       var Dynamoparams = {
         TableName: table,
-        Key:{
+        Item:{
             "email": req.body.username,
             "token": Math.random().toString(36).substr(2, 5)
 
         }
     };
     
-    docClient.get(Dynamoparams, function(err, data) {
-        if (err) {
-            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-        } else {
-            console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-        }
-    });
+    docClient.put(params, function(err, data) {
+      if (err) {
+          console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+      } else {
+          console.log("Added item:", JSON.stringify(data, null, 2));
+      }
+  });
       var params = {
         Message: 'MESSAGE_TEXT', /* required */
         TopicArn: SNS_TOPIC_ARN
