@@ -570,7 +570,7 @@ console.log("Querying for movies from 1985.");
 let queryParams = {
   TableName: 'dynamo',
   Key: {
-      'id': { S: data.Email }
+      'id': { S: email }
   },
 };
 // first get item and check if email exists
@@ -588,17 +588,17 @@ docClient.getItem(queryParams, (err, data) => {
   
 });
 
-docClient.query(params, function(err, data) {
-    if (err) {
+// docClient.query(params, function(err, data) {
+//     if (err) {
      
 
-        logger.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-    } else {
+//         logger.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+//     } else {
 
-        logger.info("Query succeeded.", data);
+//         logger.info("Query succeeded.", data);
         
-    }
-});
+//     }
+// });
 
 }
 
