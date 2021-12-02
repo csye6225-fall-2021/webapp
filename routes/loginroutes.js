@@ -572,10 +572,10 @@ var params = {
   //Key:{
   //     "id": {"S" : email}
   // }
-    KeyConditionExpression: 'id = :id',
-    ExpressionAttributeValues : {
-      ':id' : {email}
-    }
+    // KeyConditionExpression: 'id = :id',
+    // ExpressionAttributeValues : {
+    //   ':id' : {email}
+    // }
 };
 
 docClient.query(params, function(err, data) {
