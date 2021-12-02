@@ -583,9 +583,9 @@ ddb.getItem(queryParams, (err, data) => {
      logger.info("err", err)
   else {
       logger.info("****",data.Item)
-      logger.info("Tokennnnsss",data.Item.token.S)
+      logger.info("Tokennnnsss",data.Item.token)
 
-       if(token == data.Item.token.S){
+       if(token == data.Item.token){
         User.updateStatus(username,(err1, newValue) =>{
           
           console.log("err 1", err1)
