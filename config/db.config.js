@@ -22,9 +22,8 @@ class Database {
                 // to test if credentials are correct
                 await mysql.createConnection(dbConf);
                 const pool = mysql.createPool(dbConf);
-                var user_creation ="create TABLE IF NOT EXISTS users (first_name varchar(255), last_name varchar(255), id varchar(255),"
-                +"username varchar(255) primary key , password varchar(255), account_created date, account_updated date);";
-
+                pool.query("create TABLE IF NOT EXISTS users (first_name varchar(255), last_name varchar(255), id varchar(255),"
+                +"username varchar(255) primary key , password varchar(255), account_created date, account_updated date, isVerified BOOL, verifiedDate date);");
                 var image_creation = "create table if not exists image (filename varchar(200), url varchar(250), bucketName varchar(255), "
                 +"username varchar(255),foreign key(username) references users(username), uploaded_date date, img_key varchar(250));";
 
