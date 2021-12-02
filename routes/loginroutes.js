@@ -567,16 +567,26 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 
 console.log("Querying for movies from 1985.");
 
-var params = {
-    TableName : "dynamo",
-  //Key:{
-  //     "id": {"S" : email}
-  // }
-    // KeyConditionExpression: 'id = :id',
-    // ExpressionAttributeValues : {
-    //   ':id' : {email}
-    // }
+let queryParams = {
+  TableName: 'dynamo',
+  Key: {
+      'id': { S: data.Email }
+  },
 };
+// first get item and check if email exists
+//if does not exist put item and send email,
+//if exists check if ttl > currentTime,
+// if ttl is greater than current time do nothing,
+// else send email
+docClient.getItem(queryParams, (err, data) => {
+  if (err) 
+     logger.log("err", err)
+  else {
+      logger.log("res",data.Item)
+      
+      }
+  
+});
 
 docClient.query(params, function(err, data) {
     if (err) {
