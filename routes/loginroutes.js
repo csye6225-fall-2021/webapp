@@ -570,7 +570,7 @@ console.log("Querying for movies from 1985.");
 var params = {
     TableName : "dynamo",
     Key:{
-      "id": email
+      "id": {"S" : email}
   }
 };
 
