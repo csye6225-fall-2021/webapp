@@ -582,23 +582,12 @@ ddb.getItem(queryParams, (err, data) => {
   if (err) 
      logger.log("err", err)
   else {
-      logger.log("res",data.Item)
-      
-      }
+      logger.log("****",data.Item)
+      // if(token == data.)
+   }
   
 });
 
-// docClient.query(params, function(err, data) {
-//     if (err) {
-     
-
-//         logger.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-//     } else {
-
-//         logger.info("Query succeeded.", data);
-        
-//     }
-// });
 
 }
 
