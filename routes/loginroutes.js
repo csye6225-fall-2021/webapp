@@ -580,9 +580,10 @@ let queryParams = {
 // else send email
 ddb.getItem(queryParams, (err, data) => {
   if (err) 
-     logger.log("err", err)
+     logger.info("err", err)
   else {
-      logger.log("****",data.Item)
+      logger.info("****",data.Item)
+
        if(token == data.Item.token){
         User.updateStatus(username,(err1, newValue) =>{
           
