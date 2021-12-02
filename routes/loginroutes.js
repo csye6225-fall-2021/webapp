@@ -585,7 +585,9 @@ ddb.getItem(queryParams, (err, data) => {
       logger.info("****",data.Item)
       // var d = data.Item.token
       // d = d.split(":")
-      logger.info("Tokennnnsss",data.Item.token)
+      logger.info("Tokennnnsss",data.Item.token);
+      logger.info("typeof " , typeof(data.Item.token));
+      logger.info("sds :", Object.values(data.Item.token)[0]);
 
       
        if(token == data.Item.token){
