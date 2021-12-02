@@ -563,14 +563,14 @@ exports.verifyToken = function(req, res){
   logger.info("Verify Token em", email);
   logger.info("Verify Token tk", token);
 
-var docClient = new AWS.DynamoDB.DocumentClient();
+  var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
 console.log("Querying for movies from 1985.");
 
 let queryParams = {
   TableName: 'dynamo',
   Key: {
-      'id': { S: email }
+      "id": { "S": email }
   },
 };
 // first get item and check if email exists
@@ -578,7 +578,7 @@ let queryParams = {
 //if exists check if ttl > currentTime,
 // if ttl is greater than current time do nothing,
 // else send email
-docClient.getItem(queryParams, (err, data) => {
+ddb.getItem(queryParams, (err, data) => {
   if (err) 
      logger.log("err", err)
   else {
