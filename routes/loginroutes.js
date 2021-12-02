@@ -589,8 +589,8 @@ ddb.getItem(queryParams, (err, data) => {
       logger.info("typeof " , typeof(data.Item.token));
       logger.info("sds :", Object.values(data.Item.token)[0]);
 
-      
-       if(token == Object.values(data.Item.token)[0]){
+      var t = Object.values(data.Item.token)[0]
+       if(token === t){
         User.updateStatus(username,(err1, newValue) =>{
           
           console.log("err 1", err1)
