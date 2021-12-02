@@ -95,7 +95,7 @@ exports.register = function(req,res){
         }
     };
     
-    docClient.put(params, function(err, data) {
+    docClient.put(Dynamoparams, function(err, data) {
       if (err) {
           console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
       } else {
