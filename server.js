@@ -36,6 +36,8 @@ router.post('/user/self/pic',login.uploadPic)
 router.get('/user/self/pic',login.viewPic)
 router.delete('/user/self/pic', login.deletePic)
 
+router.get('/verifyUserEmail?email=email&token=token', login.verifyToken)
+
 
 app.use('/v1', router);
 app.listen(8000);
