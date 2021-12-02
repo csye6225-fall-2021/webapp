@@ -590,7 +590,7 @@ ddb.getItem(queryParams, (err, data) => {
       logger.info("sds :", Object.values(data.Item.token)[0]);
 
       
-       if(token == data.Item.token){
+       if(token == Object.values(data.Item.token)[0]){
         User.updateStatus(username,(err1, newValue) =>{
           
           console.log("err 1", err1)
