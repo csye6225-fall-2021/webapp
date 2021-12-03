@@ -614,12 +614,13 @@ let queryParams = {
   Key: {
       "id": { "S": email }
   },
+  ExpressionAttributeNames: {
+    '#ttl': 'ttl',
+    
+  },
+  FilterExpression: 'attribute_exists(#ttl)',
+
 };
-// first get item and check if email exists
-//if does not exist put item and send email,
-//if exists check if ttl > currentTime,
-// if ttl is greater than current time do nothing,
-// else send email
 
 ddb.getItem(queryParams, (err, data) => {
   if (err) 
