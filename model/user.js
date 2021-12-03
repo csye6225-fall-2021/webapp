@@ -216,7 +216,7 @@ User.isVerified = async(username, result)=>{
   let conn = await sql.getDBConnection();
 
   try{
-    let [data, fields] =await conn.query("select * from users WHERE username = ?", username)
+    let [data, fields] =await conn.query("select * FROM users WHERE username =?", [username])
  
     result(null, data);
     return
