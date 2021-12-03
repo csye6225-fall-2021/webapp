@@ -39,7 +39,7 @@ User.create = async (newCustomer, result) => {
 User.authenticate = async (newCustomer, result) => {
   var username = newCustomer.username;
 	var password = newCustomer.password;
-  let conn = await sql.getDBConnection();
+  let conn = await sql.getDBConnection1();
 
 	if (username && password) {
 
