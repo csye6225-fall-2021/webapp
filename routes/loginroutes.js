@@ -97,7 +97,8 @@ exports.register = function(req,res){
             id : req.body.username,
             // email: req.body.username,
             token: Math.random().toString(36).substr(2, 5),
-            expiryDate:  expires.toISOString()
+            expiryDate: Math.floor(Date.now() / 1000)
+
         }
     };
     
@@ -634,9 +635,11 @@ ddb.getItem(queryParams, (err, data) => {
 
         var now = new Date();
         //var d = new Date( ... ); // pass all the parameters you need to create the time
-        var dd = new Date(data.Item.expiryDate)
-        logger.info("Format ",dd)
-        if (now.getTime() > dd.getTime()) {
+        //var dd = new Date(data.Item.expiryDate)
+        logger.info("Format1 ",data.Item.expiryDate)
+        logger.info("Format2 ",Math.floor(Date.now() / 1000))
+
+        if (Math.floor(Date.now() / 1000) > data.Item.expiryDate) {
             logger.info("Token expired")
             return res.status(400).send("Token Expired")
 
