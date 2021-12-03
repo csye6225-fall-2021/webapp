@@ -567,6 +567,10 @@ exports.verifyToken = function(req, res){
 
 console.log("Querying for movies from 1985.");
 
+if(email ==undefined || token == undefined){
+  logger.info("Invalid Email or token");
+  return
+}
 let queryParams = {
   TableName: 'dynamo',
   Key: {
@@ -578,6 +582,7 @@ let queryParams = {
 //if exists check if ttl > currentTime,
 // if ttl is greater than current time do nothing,
 // else send email
+
 ddb.getItem(queryParams, (err, data) => {
   if (err) 
      logger.info("err", err)
