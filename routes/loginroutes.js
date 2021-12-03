@@ -573,7 +573,7 @@ exports.checkIsVerified = function(req, res){
     }else{
       logger.info("ERR 1",newValue);
 
-      if(newValue == false || newValue ==0){
+      if(newValue[0].isVerified == false || newValue[0].isVerified ==0){
         logger.info("User not verified");
 
          return res.status(400).send("User not verified to make this call")
@@ -582,7 +582,6 @@ exports.checkIsVerified = function(req, res){
       
     }
 
-    next()
   })
 
 }
