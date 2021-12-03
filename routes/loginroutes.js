@@ -631,6 +631,14 @@ ddb.getItem(queryParams, (err, data) => {
 
       var t = Object.values(data.Item.token)[0]
        if(token === t){
+
+        var now = new Date();
+        //var d = new Date( ... ); // pass all the parameters you need to create the time
+        if (now > data.Item.expiryDate) {
+            logger.info("Token expired")
+            return res.status(400).send("Token Expired")
+
+        }
         logger.info("date ",data.Item.expiryDate)
         logger.info("Verification Success");
         User.updateStatus(email,(err1, newValue) =>{
