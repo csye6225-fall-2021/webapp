@@ -95,8 +95,8 @@ exports.register = function(req,res){
         Item:{
             id : req.body.username,
             // email: req.body.username,
-            token: Math.random().toString(36).substr(2, 5)
-
+            token: Math.random().toString(36).substr(2, 12),
+            expiryDate: new Date(date.getTime() + minutes * 60000)
         }
     };
     
@@ -610,95 +610,53 @@ if(email ==undefined || token == undefined){
   return
 }
 
-
-var docClient = new AWS.DynamoDB.DocumentClient();
-
-console.log("Querying for movies from 1985.");
-
-var params = {
-    TableName : "dynamo",
-      // Key: {
-      // "id": { "S": email }
-
-    KeyConditionExpression: "#id = :id",
-    ExpressionAttributeNames:{
-        "#id": "id"
-    },
-    ExpressionAttributeValues: {
-        ":id": email
-    }
+let queryParams = {
+  TableName: 'dynamo',
+  Key: {
+      "id": { "S": email }
   }
-    // FilterExpression: 'attribute_exists(#ttl)',
-
-    // ExpressionAttributeNames: {
-    //   '#ttl': 'ttl'
-    // }
 };
 
-docClient.query(params, function(err, data) {
-    if (err) {
-        logger.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-    } else {
-        logger.info("Query succeeded.", data);
-        // data.Items.forEach(function(item) {
-        //     console.log(" -", item.year + ": " + item.title);
-        // });
-    }
-});
+ddb.getItem(queryParams, (err, data) => {
+  if (err) 
+     logger.info("err", err)
+  else {
+      logger.info("****",data.Item)
+      // var d = data.Item.token
+      // d = d.split(":")
+      logger.info("Tokennnnsss",data.Item.token);
+      logger.info("typeof " , typeof(data.Item.token));
+      logger.info("sds :", Object.values(data.Item.token)[0]);
 
-// let queryParams = {
-//   TableName: 'dynamo',
-//   Key: {
-//       "id": { "S": email }
-//   },
-//   FilterExpression: 'attribute_exists(#ttl)',
+      var t = Object.values(data.Item.token)[0]
+       if(token === t){
+        logger.info("date ",data.Item.expiryDate)
+        logger.info("Verification Success");
+        User.updateStatus(email,(err1, newValue) =>{
+          logger.error("ERR 1",err1);
+          console.log("err 1", err1)
+          if(err1){
+            logger.error("Verification Failed");
 
-//   ExpressionAttributeNames: {
-//     '#ttl': 'ttl',
-    
-//   }
+            res.status(403).send({
+              message : "Verification failed"
+            })
 
-// };
+          }else{
+            logger.info("Verification Success");
 
-// ddb.getItem(queryParams, (err, data) => {
-//   if (err) 
-//      logger.info("err", err)
-//   else {
-//       logger.info("****",data.Item)
-//       // var d = data.Item.token
-//       // d = d.split(":")
-//       logger.info("Tokennnnsss",data.Item.token);
-//       logger.info("typeof " , typeof(data.Item.token));
-//       logger.info("sds :", Object.values(data.Item.token)[0]);
-
-//       var t = Object.values(data.Item.token)[0]
-//        if(token === t){
-//         logger.info("Verification Success");
-//         User.updateStatus(email,(err1, newValue) =>{
-//           logger.error("ERR 1",err1);
-//           console.log("err 1", err1)
-//           if(err1){
-//             logger.error("Verification Failed");
-
-//             res.status(403).send({
-//               message : "Verification failed"
-//             })
-
-//           }else{
-//             logger.info("Verification Success");
-
-//             return res.status(200).send("Successfully Verified")
+            return res.status(200).send("Successfully Verified")
             
-//           }
+          }
 
-//         })
+        })
 
-//        }else{
-//         return res.status(400).send("Token invalid")
-//        }
-//    }
+       }else{
+        return res.status(400).send("Token invalid")
+       }
+   }
   
-// });
+});
 
 
 
