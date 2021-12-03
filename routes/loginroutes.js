@@ -617,14 +617,22 @@ console.log("Querying for movies from 1985.");
 
 var params = {
     TableName : "dynamo",
-      Key: {
-      "id": { "S": email }
-  },
-    FilterExpression: 'attribute_exists(#ttl)',
+      // Key: {
+      // "id": { "S": email }
 
-    ExpressionAttributeNames: {
-      '#ttl': 'ttl'
+    KeyConditionExpression: "#id = :id",
+    ExpressionAttributeNames:{
+        "#id": "id"
+    },
+    ExpressionAttributeValues: {
+        ":id": email
     }
+  }
+    // FilterExpression: 'attribute_exists(#ttl)',
+
+    // ExpressionAttributeNames: {
+    //   '#ttl': 'ttl'
+    // }
 };
 
 docClient.query(params, function(err, data) {
