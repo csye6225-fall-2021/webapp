@@ -29,12 +29,12 @@ router.get('/', function(req, res) {
 
 //route to handle user registration
 router.post('/user',login.register);
-router.get('/user/self',login.getDetails);
-router.put('/user/self',login.update);
+router.get('/user/self', login.checkIsVerified,login.getDetails);
+router.put('/user/self',login.checkIsVerified,login.update);
 //router.post('/user/self/pic',login.uploadPic);
-router.post('/user/self/pic',login.uploadPic)
-router.get('/user/self/pic',login.viewPic)
-router.delete('/user/self/pic', login.deletePic)
+router.post('/user/self/pic',login.checkIsVerified,login.uploadPic)
+router.get('/user/self/pic',login.checkIsVerified,login.viewPic)
+router.delete('/user/self/pic', login.checkIsVerified,login.deletePic)
 
 router.get('/verifyUserEmail', login.verifyToken)
 

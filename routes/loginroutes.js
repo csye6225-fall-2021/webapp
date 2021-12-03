@@ -22,6 +22,7 @@ const log = require("../logs")
 const logger = log.getLogger('logs');
 const querystring = require('querystring');
 const url = require('url');
+const { nextTick } = require('process');
 
 
 exports.register = function(req,res){
@@ -59,7 +60,6 @@ exports.register = function(req,res){
     "first_name" : req.body.first_name,
     "last_name" : req.body.last_name,
     "isVerified": false,
-    "verifiedDate":""
    }
 
   User.create(users, (err,data) => {
@@ -87,14 +87,16 @@ exports.register = function(req,res){
 
       var docClient = new AWS.DynamoDB.DocumentClient();
       var table = "dynamo";
-
+      var expires = new Date();
+      expires.setTime(expires.getTime() + (60*5*1000)); 
 
       var Dynamoparams = {
         TableName: table,
         Item:{
             id : req.body.username,
             // email: req.body.username,
-            token: Math.random().toString(36).substr(2, 5)
+            token: Math.random().toString(36).substr(2, 5),
+            expiryDate: Math.floor((new Date().getTime() + 5*60000)/ 1000)
 
         }
     };
@@ -127,7 +129,7 @@ exports.register = function(req,res){
 
 }
 
-exports.getDetails = function(req, res){
+exports.getDetails = function(req, res, next){
     logger.info("get user called");
 
     sdc.increment("User.get.getUser");
@@ -168,7 +170,7 @@ exports.getDetails = function(req, res){
 }
 
 
-exports.update = function (req, res){
+exports.update = function (req, res,next){
 
   // console.log("users ", req.headers)
   logger.info("Update user called");
@@ -238,7 +240,7 @@ exports.update = function (req, res){
 }
 
 
-exports.uploadPic = function(req, res){ 
+exports.uploadPic = function(req, res, next){ 
  
   logger.info("Update pic called");
   sdc.increment("User.POST.UploadPic");
@@ -410,7 +412,7 @@ exports.uploadPic = function(req, res){
 
   }
 
-  exports.viewPic = function(req, res){ 
+  exports.viewPic = function(req, res, next){ 
     
     logger.info("View pic called");
     sdc.increment("User.GET.viewPic");
@@ -463,7 +465,7 @@ exports.uploadPic = function(req, res){
     }
 
   
-  exports.deletePic = function(req, res){
+  exports.deletePic = function(req, res, next){
 
     logger.info("Delete pic called");
     sdc.increment("User.DELETE.deletePic");
@@ -548,6 +550,43 @@ exports.uploadPic = function(req, res){
           
 }
 
+exports.checkIsVerified = function(req, res, next){
+
+  const base64Credentials =  req.headers.authorization.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    const [username, password] = credentials.split(':');
+    var auth = {
+        username : username,
+        password : password
+      }
+
+  logger.info("Is verified called")
+  User.isVerified(auth.username,(err1, newValue) =>{
+    logger.error("ERR 1",err1);
+    console.log("err 1", err1)
+    if(err1){
+      logger.error("Verification Failed");
+
+      res.status(403).send({
+        message : "Verification failed"
+      })
+
+    }else{
+      logger.info("new Val",newValue);
+
+      if(newValue[0].isVerified == false || newValue[0].isVerified ==0){
+        logger.info("User not verified");
+
+         return res.status(400).send("User not verified to make this call")
+      }else
+        next();
+      
+      
+    }
+
+  })
+
+}
 exports.verifyToken = function(req, res){
 
   logger.info("Verify Token");
@@ -567,29 +606,44 @@ exports.verifyToken = function(req, res){
 
 console.log("Querying for movies from 1985.");
 
+if(email ==undefined || token == undefined){
+  logger.info("Invalid Email or token");
+  return
+}
+
 let queryParams = {
   TableName: 'dynamo',
   Key: {
       "id": { "S": email }
-  },
+  }
 };
-// first get item and check if email exists
-//if does not exist put item and send email,
-//if exists check if ttl > currentTime,
-// if ttl is greater than current time do nothing,
-// else send email
+
 ddb.getItem(queryParams, (err, data) => {
   if (err) 
      logger.info("err", err)
   else {
       logger.info("****",data.Item)
-      logger.info("Tokennnnsss",data.Item.token)
-      logger.info("sssss",JSON.stringify(data, null, 2))
+      // var d = data.Item.token
+      // d = d.split(":")
+      logger.info("Tokennnnsss",data.Item.token);
+      logger.info("typeof " , typeof(data.Item.token));
+      logger.info("sds :", Object.values(data.Item.token)[0]);
 
-      
-       if(token == data.Item.token){
-        User.updateStatus(username,(err1, newValue) =>{
-          
+      var t = Object.values(data.Item.token)[0]
+       if(token === t){
+
+        logger.info("Format1 ",data.Item.expiryDate.N)
+        logger.info("Format2 ",Math.floor(Date.now() / 1000))
+
+        if (Math.floor(Date.now() / 1000) > data.Item.expiryDate.N) {
+            logger.info("Token expired")
+            return res.status(400).send("Token Expired")
+
+        }
+        logger.info("date ",data.Item.expiryDate)
+        logger.info("Verification Success");
+        User.updateStatus(email,(err1, newValue) =>{
+          logger.error("ERR 1",err1);
           console.log("err 1", err1)
           if(err1){
             logger.error("Verification Failed");
@@ -613,6 +667,8 @@ ddb.getItem(queryParams, (err, data) => {
    }
   
 });
+
+
 
 
 }

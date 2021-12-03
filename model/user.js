@@ -39,7 +39,7 @@ User.create = async (newCustomer, result) => {
 User.authenticate = async (newCustomer, result) => {
   var username = newCustomer.username;
 	var password = newCustomer.password;
-  let conn = await sql.getDBConnection();
+  let conn = await sql.getDBConnection1();
 
 	if (username && password) {
 
@@ -131,13 +131,14 @@ User.updateStatus = async (username)=>{
   let conn = await sql.getDBConnection();
   try{
     // let [data1, fields1] =await conn.query(" DELETE FROM image WHERE username = ?",picInfo.username)
-    let [data, fields] =await conn.query("UPDATE users set isVerified =1 where username =?", username)
+    let [data, fields] =await conn.query("UPDATE users set isVerified=?, verifiedDate=? where username =?",[true, new Date(),username])
  
     result(null, data);
     return
     
    
   }catch (err){
+
     return result(err, null);
   }
 
@@ -200,6 +201,22 @@ User.checkifPicExists = async (username,  ) =>{
 
   try{
     let [data, fields] =await conn.query("select * image WHERE username = ?", username)
+ 
+    result(null, data);
+    return
+    
+   
+  }catch (err){
+    return result(err, null);
+  }
+}
+
+User.isVerified = async(username, result)=>{
+
+  let conn = await sql.getDBConnection();
+
+  try{
+    let [data, fields] =await conn.query("select * FROM users WHERE username =?", [username])
  
     result(null, data);
     return
