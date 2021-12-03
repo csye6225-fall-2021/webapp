@@ -633,7 +633,7 @@ ddb.getItem(queryParams, (err, data) => {
       var t = Object.values(data.Item.token)[0]
        if(token === t){
 
-        logger.info("Format1 ",data.Item.expiryDate)
+        logger.info("Format1 ",data.Item.expiryDate.N)
         logger.info("Format2 ",Math.floor(Date.now() / 1000))
 
         if (Math.floor(Date.now() / 1000) > data.Item.expiryDate) {
