@@ -634,8 +634,9 @@ ddb.getItem(queryParams, (err, data) => {
 
         var now = new Date();
         //var d = new Date( ... ); // pass all the parameters you need to create the time
-        logger.info("Format ",data.Item.expiryDate.getTime())
-        if (now.getTime() > data.Item.expiryDate) {
+        var dd = new Date(data.Item.expiryDate)
+        logger.info("Format ",dd)
+        if (now.getTime() > dd.getTime()) {
             logger.info("Token expired")
             return res.status(400).send("Token Expired")
 
