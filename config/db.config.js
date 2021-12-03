@@ -71,10 +71,6 @@ class Database {
         }
 
     }
-}
-
-class Database1 {
-
     static async getDBConnection1() {
         try {
             if (!this.db1) {
@@ -105,4 +101,5 @@ class Database1 {
     }
 }
 
-module.exports = Database,Database1;
+
+module.exports = Database;
