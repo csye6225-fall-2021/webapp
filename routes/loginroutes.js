@@ -88,15 +88,16 @@ exports.register = function(req,res){
 
       var docClient = new AWS.DynamoDB.DocumentClient();
       var table = "dynamo";
-
+      var expires = new Date();
+      expires.setTime(expires.getTime() + (60*60*1000)); 
 
       var Dynamoparams = {
         TableName: table,
         Item:{
             id : req.body.username,
             // email: req.body.username,
-            token: Math.random().toString(36).substr(2, 10),
-            expiryDate: new Date(date.getTime() + minutes * 60000).toISOString() 
+            token: Math.random().toString(36).substr(2, 5),
+            expiryDate:  expires
         }
     };
     
