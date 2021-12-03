@@ -614,11 +614,12 @@ let queryParams = {
   Key: {
       "id": { "S": email }
   },
+  FilterExpression: 'attribute_exists(#ttl)',
+
   ExpressionAttributeNames: {
     '#ttl': 'ttl',
     
-  },
-  FilterExpression: 'attribute_exists(#ttl)',
+  }
 
 };
 
