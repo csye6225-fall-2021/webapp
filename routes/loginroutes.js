@@ -89,7 +89,7 @@ exports.register = function(req,res){
       var docClient = new AWS.DynamoDB.DocumentClient();
       var table = "dynamo";
       var expires = new Date();
-      expires.setTime(expires.getTime() + (60*60*1000)); 
+      expires.setTime(expires.getTime() + (60*5*1000)); 
 
       var Dynamoparams = {
         TableName: table,
@@ -631,6 +631,14 @@ ddb.getItem(queryParams, (err, data) => {
 
       var t = Object.values(data.Item.token)[0]
        if(token === t){
+
+        var now = new Date();
+        //var d = new Date( ... ); // pass all the parameters you need to create the time
+        if (now > data.Item.expiryDate) {
+            logger.info("Token expired")
+            return res.status(400).send("Token Expired")
+
+        }
         logger.info("date ",data.Item.expiryDate)
         logger.info("Verification Success");
         User.updateStatus(email,(err1, newValue) =>{
