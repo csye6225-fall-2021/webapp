@@ -636,7 +636,7 @@ ddb.getItem(queryParams, (err, data) => {
         logger.info("Format1 ",data.Item.expiryDate.N)
         logger.info("Format2 ",Math.floor(Date.now() / 1000))
 
-        if (Math.floor(Date.now() / 1000) > data.Item.expiryDate) {
+        if (Math.floor(Date.now() / 1000) > data.Item.expiryDate.N) {
             logger.info("Token expired")
             return res.status(400).send("Token Expired")
 
