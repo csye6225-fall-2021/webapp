@@ -548,6 +548,31 @@ exports.uploadPic = function(req, res){
           
 }
 
+exports.checkIsVerified = function(req, res){
+
+  User.isVerified(req.body.username,(err1, newValue) =>{
+    logger.error("ERR 1",err1);
+    console.log("err 1", err1)
+    if(err1){
+      logger.error("Verification Failed");
+
+      res.status(403).send({
+        message : "Verification failed"
+      })
+
+    }else{
+      if(newValue == false || newValue ==0){
+        logger.info("User not verified");
+
+         return res.status(400).send("User not verified to make this call")
+      }
+      
+      
+    }
+
+  })
+
+}
 exports.verifyToken = function(req, res){
 
   logger.info("Verify Token");
@@ -622,6 +647,8 @@ ddb.getItem(queryParams, (err, data) => {
    }
   
 });
+
+
 
 
 }

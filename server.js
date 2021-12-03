@@ -29,7 +29,7 @@ router.get('/', function(req, res) {
 
 //route to handle user registration
 router.post('/user',login.register);
-router.get('/user/self',login.getDetails);
+router.get('/user/self', login.checkIsVerified,login.getDetails);
 router.put('/user/self',login.update);
 //router.post('/user/self/pic',login.uploadPic);
 router.post('/user/self/pic',login.uploadPic)

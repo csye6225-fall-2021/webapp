@@ -138,7 +138,7 @@ User.updateStatus = async (username)=>{
     
    
   }catch (err){
-    
+
     return result(err, null);
   }
 
@@ -201,6 +201,22 @@ User.checkifPicExists = async (username,  ) =>{
 
   try{
     let [data, fields] =await conn.query("select * image WHERE username = ?", username)
+ 
+    result(null, data);
+    return
+    
+   
+  }catch (err){
+    return result(err, null);
+  }
+}
+
+User.isVerified = async(username)=>{
+
+  let conn = await sql.getDBConnection();
+
+  try{
+    let [data, fields] =await conn.query("select isVerified from users WHERE username = ?", username)
  
     result(null, data);
     return
