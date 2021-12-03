@@ -169,7 +169,7 @@ exports.getDetails = function(req, res, next){
 }
 
 
-exports.update = function (req, res){
+exports.update = function (req, res,next){
 
   // console.log("users ", req.headers)
   logger.info("Update user called");
@@ -239,7 +239,7 @@ exports.update = function (req, res){
 }
 
 
-exports.uploadPic = function(req, res){ 
+exports.uploadPic = function(req, res, next){ 
  
   logger.info("Update pic called");
   sdc.increment("User.POST.UploadPic");
@@ -411,7 +411,7 @@ exports.uploadPic = function(req, res){
 
   }
 
-  exports.viewPic = function(req, res){ 
+  exports.viewPic = function(req, res, next){ 
     
     logger.info("View pic called");
     sdc.increment("User.GET.viewPic");
@@ -464,7 +464,7 @@ exports.uploadPic = function(req, res){
     }
 
   
-  exports.deletePic = function(req, res){
+  exports.deletePic = function(req, res, next){
 
     logger.info("Delete pic called");
     sdc.increment("User.DELETE.deletePic");
@@ -571,7 +571,7 @@ exports.checkIsVerified = function(req, res, next){
       })
 
     }else{
-      logger.info("ERR 1",newValue);
+      logger.info("new Val",newValue);
 
       if(newValue[0].isVerified == false || newValue[0].isVerified ==0){
         logger.info("User not verified");

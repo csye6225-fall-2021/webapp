@@ -39,7 +39,7 @@ User.create = async (newCustomer, result) => {
 User.authenticate = async (newCustomer, result) => {
   var username = newCustomer.username;
 	var password = newCustomer.password;
-  let conn = await sql.getDBConnection();
+  let conn = await sql.getDBConnection1();
 
 	if (username && password) {
 
@@ -146,7 +146,7 @@ User.updateStatus = async (username)=>{
 
 User.viewPic = async (username, result)=>{
 
-  let conn = await sql.getDBConnection();
+  let conn = await sql.getDBConnection1();
 
   try{
     let [data, fields] =await conn.query("SELECT * FROM image WHERE username = ?", username)
