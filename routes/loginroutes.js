@@ -598,7 +598,7 @@ ddb.getItem(queryParams, (err, data) => {
        if(token === t){
         logger.info("Verification Success");
         User.updateStatus(email,(err1, newValue) =>{
-          
+          logger.error("ERR 1",err1);
           console.log("err 1", err1)
           if(err1){
             logger.error("Verification Failed");
