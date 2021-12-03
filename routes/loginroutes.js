@@ -565,7 +565,8 @@ exports.checkIsVerified = function(req, res){
         logger.info("User not verified");
 
          return res.status(400).send("User not verified to make this call")
-      }
+      }else 
+        next();
       
       
     }
