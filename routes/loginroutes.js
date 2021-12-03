@@ -95,8 +95,8 @@ exports.register = function(req,res){
         Item:{
             id : req.body.username,
             // email: req.body.username,
-            token: Math.random().toString(36).substr(2, 5),
-            // expiryDate: new Date(date.getTime() + minutes * 60000)
+            token: Math.random().toString(36).substr(2, 10),
+            expiryDate: new Date(date.getTime() + minutes * 60000).toISOString() 
         }
     };
     
