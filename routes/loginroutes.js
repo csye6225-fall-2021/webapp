@@ -97,7 +97,7 @@ exports.register = function(req,res){
             id : req.body.username,
             // email: req.body.username,
             token: Math.random().toString(36).substr(2, 5),
-            expiryDate:  expires
+            expiryDate:  expires.toISOString()
         }
     };
     
