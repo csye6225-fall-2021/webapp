@@ -128,7 +128,7 @@ exports.register = function(req,res){
 
 }
 
-exports.getDetails = function(req, res){
+exports.getDetails = function(req, res, next){
     logger.info("get user called");
 
     sdc.increment("User.get.getUser");
@@ -549,7 +549,7 @@ exports.uploadPic = function(req, res){
           
 }
 
-exports.checkIsVerified = function(req, res){
+exports.checkIsVerified = function(req, res, next){
 
   const base64Credentials =  req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
@@ -577,7 +577,8 @@ exports.checkIsVerified = function(req, res){
         logger.info("User not verified");
 
          return res.status(400).send("User not verified to make this call")
-      }
+      }else
+        next();
       
       
     }
