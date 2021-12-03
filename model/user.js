@@ -131,7 +131,7 @@ User.updateStatus = async (username)=>{
   let conn = await sql.getDBConnection();
   try{
     // let [data1, fields1] =await conn.query(" DELETE FROM image WHERE username = ?",picInfo.username)
-    let [data, fields] =await conn.query("UPDATE users set isVerified=? where username =?",[true, username])
+    let [data, fields] =await conn.query("UPDATE users set isVerified=?, verifiedDate=? where username =?",[true, new Date(),username])
  
     result(null, data);
     return

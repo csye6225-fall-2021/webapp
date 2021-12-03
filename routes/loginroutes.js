@@ -60,7 +60,6 @@ exports.register = function(req,res){
     "first_name" : req.body.first_name,
     "last_name" : req.body.last_name,
     "isVerified": false,
-    "verifiedDate":""
    }
 
   User.create(users, (err,data) => {
