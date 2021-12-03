@@ -22,6 +22,7 @@ const log = require("../logs")
 const logger = log.getLogger('logs');
 const querystring = require('querystring');
 const url = require('url');
+const { nextTick } = require('process');
 
 
 exports.register = function(req,res){
@@ -550,6 +551,7 @@ exports.uploadPic = function(req, res){
 
 exports.checkIsVerified = function(req, res){
 
+  logger.info("Is verified called")
   User.isVerified(req.body.username,(err1, newValue) =>{
     logger.error("ERR 1",err1);
     console.log("err 1", err1)
@@ -567,12 +569,12 @@ exports.checkIsVerified = function(req, res){
         logger.info("User not verified");
 
          return res.status(400).send("User not verified to make this call")
-      }else 
-        next();
+      }
       
       
     }
 
+    next()
   })
 
 }
