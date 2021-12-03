@@ -551,8 +551,16 @@ exports.uploadPic = function(req, res){
 
 exports.checkIsVerified = function(req, res){
 
+  const base64Credentials =  req.headers.authorization.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    const [username, password] = credentials.split(':');
+    var auth = {
+        username : username,
+        password : password
+      }
+
   logger.info("Is verified called")
-  User.isVerified(req.body.username,(err1, newValue) =>{
+  User.isVerified(auth.username,(err1, newValue) =>{
     logger.error("ERR 1",err1);
     console.log("err 1", err1)
     if(err1){
