@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const bluebird = require('bluebird');
 require('dotenv').config()
-var {db_host, db_user , db_password,  port, default_database} = require('../config.json')
+var {db_host, db_user , db_password,  port, default_database, replicaDb} = require('../config.json')
 
 //const [host, port1] = db_host.split(':');
 
@@ -11,7 +11,7 @@ const dbConf = {
     password : db_password,
     database : default_database,
     port : port,
-    //ssl: 'Amazon RDS',
+    ssl: 'Amazon RDS',
                 
 
     Promise: bluebird
@@ -24,7 +24,7 @@ const dbConf1 = {
     password : db_password,
     database : default_database,
     port : port,
-   // ssl: 'Amazon RDS',
+    ssl: 'Amazon RDS',
     Promise: bluebird
 };
 class Database {
