@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const bluebird = require('bluebird');
 require('dotenv').config()
-var {db_host, db_user , db_password,  port, default_database, replicaDb} = require('../config.json')
+var {db_host, db_user , db_password,  port, default_database} = require('../config.json')
 
 //const [host, port1] = db_host.split(':');
 
@@ -16,7 +16,7 @@ const dbConf = {
 
 
 const dbConf1 = {
-    host     : replicaDb,
+    host     : db_host.split(":")[0],
     user     : db_user,
     password : db_password,
     database : default_database,
