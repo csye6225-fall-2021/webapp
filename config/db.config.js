@@ -19,7 +19,7 @@ const dbConf = {
 
 
 const dbConf1 = {
-    host     : db_host.split(":")[0],
+    host     : replicaDb,
     user     : db_user,
     password : db_password,
     database : default_database,
