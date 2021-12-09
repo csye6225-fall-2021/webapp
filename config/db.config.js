@@ -11,8 +11,8 @@ const dbConf = {
     password : db_password,
     database : default_database,
     port : port,
-    //ssl: 'Amazon RDS',
-                
+    ssl: 'Amazon RDS',
+      
 
     Promise: bluebird
 };
@@ -24,7 +24,7 @@ const dbConf1 = {
     password : db_password,
     database : default_database,
     port : port,
-   // ssl: 'Amazon RDS',
+    ssl: 'Amazon RDS',
     Promise: bluebird
 };
 class Database {
